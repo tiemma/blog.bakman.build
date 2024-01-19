@@ -1,14 +1,15 @@
 ---
 layout: post_no_side_bar
+title: Exploring The Math of Thresholds
+date: Jan 18, 2024
+tags: ["metrics", "thresholds", "statistics", "law of large numbers", "curve fitting"]
 ---
-
-# Exploring The Math of Thresholds
 
 > "I have had my results for a long time: but I do not yet know how I am to arrive at them." - Carl Friedrich Gauss
 
 
 *TLDR*: How do I guarantee a threshold works for an interval of metric observations? The answer is it depends on the
-metric behavior.
+systems' behavior.
 
 ## What is a metric?
 
@@ -83,7 +84,7 @@ These thresholds both suffer from outliers which occur once-in-a-while and give 
 
 > NOTE: I will not be covering how to ascertain thresholds for alarms that prevent flagging false page behavior as the
 > subject-matter solution is subjective, and quite obviously, thresholds capture outliers which is how we know they
-> happened (thank-you-captain-obvious).
+> happened.
 
 ## Business Case Statement With Thresholds
 
@@ -544,11 +545,9 @@ Further from here, I use the following abbreviations and this is what their valu
 **std_dev**: Standard Deviation, smaller is better <br />
 **chisq_gf**: percent: Chi Squared Goodness of Fit Percentage, larger is better
 
-
 Capturing this deviation for a fit or unfit is done using the std_dev of the dataset. We can reasonably
 identify a good fit when we have a std_dev which falls below 1. We can also compute the goodness of fit by computing the
 chi squared goodness of fit test to measure how aligned fit is.
-
 
 ![](https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/chisq.png)
 
@@ -557,7 +556,9 @@ The different values are the observed (Yi), expected (f(Xi)) and uncertainty.
 In this theory, the closer the chi-square value to the length of the sample, the better the fit is. 
 Chi-squared values that are a lot smaller than the length represent an overestimated uncertainty and much larger represent a bad fit.
 ```
-> Source: [https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
+
+>
+Source: [https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
 
 In computing the chi squared goodness of fit as a percentage, we apply the following method on our fitted and normal
 data
@@ -573,7 +574,8 @@ def goodness_of_fit(observed, expected):
 ```
 
 > Excerpt
-> from [cloudflare](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
+>
+from [cloudflare](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
 
 We observe a bad fit behaviour when we simulate what is an unfit scenario with the curve fitting procedure for our data.
 In this setting, we arrive at a std_dev > 1 and a low chisq_gf score below 1.

@@ -11,39 +11,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
     {% include head-custom.html %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{"/images/icon.png?v=" | append: site.github.build_revision }}">
 </head>
 <body>
 <style>
-    h2 {
-        padding-top: 2rem;
-    }
+    @media print, screen and (min-width: 960px) {
+        h2 {
+            padding-top: 2rem;
+        }
 
-    h3 {
-        padding-top: 1rem;
-    }
+        h3 {
+            padding-top: 1rem;
+        }
 
-    section img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-        min-height: 20rem;
-    }
-    body {
-        font-size: 16px
-    }
-    section{
-        width: auto;
-    }
+        section img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            min-height: 20rem;
+        }
 
-    header {
-        display: block;
-        right: 50px;
-    }
+        section {
+            float: left;
+            width: auto;
+        }
 
-    footer{
-        display: block;
-        position: relative;
+        body {
+            font-size: 16px;
+            position: absolute;
+        }
+
+        header {
+            position: inherit;
+        }
     }
 </style>
 <div class="wrapper">
@@ -51,7 +52,7 @@
         <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
 
         {% if site.logo %}
-        <img src="{{site.logo | relative_url}}" alt="Logo" />
+        <img src="{{site.logo | relative_url}}" alt="Logo"/>
         {% endif %}
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
@@ -74,14 +75,22 @@
     </header>
     <section>
 
-        {{ content }}
+        <small>{{ page.date | date: "%-d %B %Y" }}</small>
+        <h1>{{ page.title }}</h1>
+
+        <p class="view">by {{ page.author | default: site.author }}</p>
+
+        {{content}}
+
+        {% if page.tags %}
+        <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>
+        {% endif %}
 
     </section>
     <footer>
         {% if site.github.is_project_page %}
         <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
         {% endif %}
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
     </footer>
 </div>
 <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
