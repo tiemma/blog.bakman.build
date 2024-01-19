@@ -1,3 +1,7 @@
+---
+absolute_url: https://blog.bakman.build
+---
+
 # Technical Articles
 - May 17, 2018 [Exploring the Math of Thresholds](./blogs/exploring-the-math-of-thresholds.md)
 - Feb 28, 2021 [Why is Go PANICking](https://medium.com/@tiemma/why-is-go-panicking-31ba2351986b)

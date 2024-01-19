@@ -4,6 +4,7 @@ author: Emmanuel Bakare
 repository: tiemma/blog.bakman.build
 logo: /images/icon.png
 remote_theme: pages-themes/minimal@v0.2.0
+absolute_url: https://blog.bakman.build
 lsi: true
 safe: true
 source: .

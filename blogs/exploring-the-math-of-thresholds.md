@@ -61,9 +61,7 @@ are monitoring. Any values over/below x can be deemed as odd behavior and calls 
 60% is a problem. CPU usage under 5% can also be a problem.
 
 ![Threshold at x](https://i.stack.imgur.com/SOgcp.png)
-> Sample of graph with fixed
->
-threshold, [source](https://stackoverflow.com/questions/73034240/display-thresholds-as-horizontal-lines-with-label-in-chart-js)
+> Sample of graph with fixed threshold, [source](https://stackoverflow.com/questions/73034240/display-thresholds-as-horizontal-lines-with-label-in-chart-js)
 
 ### Non-static thresholds
 
@@ -556,9 +554,7 @@ The different values are the observed (Yi), expected (f(Xi)) and uncertainty.
 In this theory, the closer the chi-square value to the length of the sample, the better the fit is. 
 Chi-squared values that are a lot smaller than the length represent an overestimated uncertainty and much larger represent a bad fit.
 ```
-
->
-Source: [https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
+> Source: [https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
 
 In computing the chi squared goodness of fit as a percentage, we apply the following method on our fitted and normal
 data
@@ -573,9 +569,7 @@ def goodness_of_fit(observed, expected):
     return ((n - chisq) / n) * 100
 ```
 
-> Excerpt
->
-from [cloudflare](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
+> Excerpt from [cloudflare](https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods)
 
 We observe a bad fit behaviour when we simulate what is an unfit scenario with the curve fitting procedure for our data.
 In this setting, we arrive at a std_dev > 1 and a low chisq_gf score below 1.
