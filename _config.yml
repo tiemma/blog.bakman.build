@@ -1,0 +1,37 @@
+title: bakman.build
+description: I desire not to be famous for being the best but to be known for doing the best I always could.
+author: Emmanuel Bakare
+repository: tiemma/blog.bakman.build
+logo: /images/icon.png
+remote_theme: pages-themes/minimal@v0.2.0
+lsi: true
+safe: true
+source: .
+incremental: true
+highlighter: rouge
+readme_index:
+  enabled: true
+  remove_originals: false
+  with_frontmatter: false
+gist:
+  noscript: false
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
+plugins:
+  - jekyll-gist
+  - jekyll-github-metadata
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-relative-links
+  - jekyll-titles-from-headings
+  - jekyll-remote-theme
+include:
+  - README.md
+titles_from_headings:
+  enabled: true
+  strip_title: false
+  collections: true
+relative_links:
+  enabled: true
+  collections: false

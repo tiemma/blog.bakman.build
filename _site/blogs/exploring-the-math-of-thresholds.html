@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Exploring The Math of Thresholds | bakman.build</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Exploring The Math of Thresholds" />
+<meta name="author" content="Emmanuel Bakare" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I desire not to be famous for being the best but to be known for doing the best." />
+<meta property="og:description" content="I desire not to be famous for being the best but to be known for doing the best." />
+<link rel="canonical" href="http://localhost:4000/blogs/exploring-the-math-of-thresholds.html" />
+<meta property="og:url" content="http://localhost:4000/blogs/exploring-the-math-of-thresholds.html" />
+<meta property="og:site_name" content="bakman.build" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Exploring The Math of Thresholds" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Emmanuel Bakare"},"description":"I desire not to be famous for being the best but to be known for doing the best.","headline":"Exploring The Math of Thresholds","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/icon.png"},"name":"Emmanuel Bakare"},"url":"http://localhost:4000/blogs/exploring-the-math-of-thresholds.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+</head>
+<body>
+<style>
+    h2 {
+        padding-top: 2rem;
+    }
+
+    h3 {
+        padding-top: 1rem;
+    }
+
+    section img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        min-height: 20rem;
+    }
+    body {
+        font-size: 16px
+    }
+    section{
+        width: auto;
+    }
+
+    header {
+        display: block;
+        right: 50px;
+    }
+
+    footer{
+        display: block;
+        position: relative;
+    }
+</style>
+<div class="wrapper">
+    <header>
+        <h1><a href="http://localhost:4000/">bakman.build</a></h1>
+
+        
+        <img src="/images/icon.png" alt="Logo" />
+        
+
+        <p>I desire not to be famous for being the best but to be known for doing the best.</p>
+
+        
+        <p class="view"><a href="https://github.com/tiemma/blog.bakman.build">View the Project on GitHub <small>tiemma/blog.bakman.build</small></a></p>
+        
+
+        
+
+        
+    </header>
+    <section>
+
+        <h1 id="exploring-the-math-of-thresholds">Exploring The Math of Thresholds</h1>
+
+<blockquote>
+  <p>“I have had my results for a long time: but I do not yet know how I am to arrive at them.” - Carl Friedrich Gauss</p>
+</blockquote>
+
+<p><em>TLDR</em>: How do I guarantee a threshold works for an interval of metric observations? The answer is it depends on the
+metric behavior.</p>
+
+<h2 id="what-is-a-metric">What is a metric?</h2>
+
+<p>A metric is a measure of a system’s quantifiable behavior, we define this as a key-value pair where the key represents
+the metric name which is always a string and the value is a number, this number can be unsigned or signed. eg
+cpu_usage_over_1_minute =&gt; 40. Metrics help us gather information about the behavior of our systems which we can use to
+define some contract (SLA/SLO) in terms of monitoring the customer experience.</p>
+
+<p>At some time last year, I was working on an elusive problem on my team with a simple summary: “How do we know what an
+ideal threshold should be based on the metrics we collect?”</p>
+
+<p><a href="https://x.com/TiemmaBakare/status/1701248898264646053?s=20"><img src="/images/@TiemmaBakare_1701248898264646053_tweetcapture.png" alt="Tweet I posted during my research process for the problems this article details" /></a></p>
+
+<blockquote>
+  <p>Tweet I posted during my research process for the problems this article details</p>
+</blockquote>
+
+<p>For those who have delved into this (and will soon after reading this article), you would understand this is tricky.</p>
+
+<h2 id="types-of-systems">Types of Systems</h2>
+
+<p>In this article, I will define two kinds of systems we can monitor namely non-deterministic and deterministic systems.</p>
+
+<h3 id="non-deterministic-systems">Non-deterministic systems</h3>
+
+<p>These are systems in which we cannot reliably predict what the metric value would be like
+eg the number of user purchases in a minute. These systems are dependent on external variables, time, or past
+data (<a href="https://en.wikipedia.org/wiki/Causal_system">causal</a>), and are unbounded. The waveform is continuous with ebbs
+and flows.</p>
+
+<h3 id="deterministic-systems">Deterministic systems</h3>
+
+<p>The metric value at any given time is (somewhat) definable and has an internal relationship
+with itself. eg total number of errors in a minute is a relationship of the number of operations started within that
+minute.</p>
+
+<p>These systems metrics (usually) have a histogram-like waveform and can be considered discrete, not dependent on time or
+past
+data (non-causal) so we can take its present-day value. It is also importantly bounded.
+eg If we make x API calls in a minute, the max errors we can get for failed API calls are x errors.</p>
+
+<h2 id="types-of-thresholds">Types of Thresholds</h2>
+
+<p>We can also have in summary two kinds of thresholds, static and non-static thresholds.</p>
+
+<h3 id="static-thresholds">Static thresholds</h3>
+
+<p>In this type of threshold, one places a line at a point x which covers all normal operating data points for the system
+you
+are monitoring. Any values over/below x can be deemed as odd behavior and calls for an investigation. eg CPU usage over
+60% is a problem. CPU usage under 5% can also be a problem.</p>
+
+<p><img src="https://i.stack.imgur.com/SOgcp.png" alt="Threshold at x" /></p>
+<blockquote>
+  <p>Sample of graph with fixed</p>
+
+  <p>threshold, <a href="https://stackoverflow.com/questions/73034240/display-thresholds-as-horizontal-lines-with-label-in-chart-js">source</a></p>
+</blockquote>
+
+<h3 id="non-static-thresholds">Non-static thresholds</h3>
+
+<p>This threshold changes with the behavior of the system. This is a causal function and its
+value is dependent on gathering heuristics about past behavior to say we are out of bounds. eg capturing a DDOS attack
+spike, this cannot be static as requests are user-generated and vary widely.</p>
+
+<p><img src="https://archive.is/Od7lA/a97a0c835c9fa05bffd8422686eb3cef9949097f.png" alt="Dynamic prediction bands" /></p>
+<blockquote>
+  <p>Obtained from medium article
+by [Marco Cerliani], <a href="https://archive.is/Od7lA">Add Prediction Intervals to your Forecasting Model</a></p>
+</blockquote>
+
+<h2 id="thresholds-systems-and-metrics">Thresholds, Systems and Metrics</h2>
+
+<p>Static thresholds work when a system is deterministic otherwise, we get false positives due to the normal non-uniform
+behavior of our system. Thresholds can also vary with the system’s reported metrics, this is required for
+non-deterministic systems.
+These thresholds both suffer from outliers which occur once-in-a-while and give false pages.</p>
+
+<blockquote>
+  <p>NOTE: I will not be covering how to ascertain thresholds for alarms that prevent flagging false page behavior as the
+subject-matter solution is subjective, and quite obviously, thresholds capture outliers which is how we know they
+happened (thank-you-captain-obvious).</p>
+</blockquote>
+
+<h2 id="business-case-statement-with-thresholds">Business Case Statement With Thresholds</h2>
+
+<p>I list below a hypothetical example of where defining thresholds can be tricky but usually happens:</p>
+
+<p><strong>Problem</strong>: we want to monitor and alarm on the number of purchases made by users to our business.</p>
+
+<p><strong>Behavior</strong>: We have peak and non-peak hours which follow a sinusoidal form as a result.</p>
+
+<p><strong>Business Case</strong>: We want to know if we have surpassed our usual average orders to scale up/down efforts to meet these
+purchases in advance, how can we know when to do this?</p>
+
+<p><strong>Technical Summary</strong>: It is a lot harder to define as we have no baseline. The number of purchases made by users is
+random and not bounded. All we know is it peaks and drops around certain times of the day.</p>
+
+<p><img src="/images/non_static_threshold.png" alt="User behaviour chart with prediction intervals" /></p>
+<blockquote>
+  <p>We need to automatically manage the thresholds to predict changes in user behaviour</p>
+</blockquote>
+
+<p>Whatever the type of threshold that needs to be defined, there is a need to know what the normal operating schedule is
+(some mean value) so we can add a guestimate (buffer) above that to define what our threshold should be.</p>
+
+<p>In the next phase, I will be covering in more detail percentile distributions and some smart
+mathematical ways to guarantee thresholds fit without initially diving into machine learning solutions (hint: it is a
+statistics problem).</p>
+
+<blockquote>
+  <p>NOTE: I do not cover the interval/buffer to monitor on with thresholds as this is out-of-scope for this article and
+very subjective to your team/organization SLAs/SLOs towards incident management. I also assume metric granularity is
+on
+a per-minute basis, the methods discussed will cover higher minute granularity nonetheless.</p>
+</blockquote>
+
+<h2 id="percentiles">Percentiles</h2>
+
+<p>Percentiles are a way to group data into 100 buckets based on some sorting function. This sorting function defines how
+the data is distributed.</p>
+
+<p>The k-th percentile is the value at which k percent of the data series falls at or below that value.
+For example, if we shuffle data containing numbers 0–100 equally into 100 buckets and we want to find the median, we can
+take the 50th percentile, p50 to arrive at this value which is 50. We can also arrive at the max value by equally taking
+the 100th percentile which is p100.</p>
+
+<p><a href="https://www.timescale.com/blog/how-percentile-approximation-works-and-why-its-more-useful-than-averages/"><img src="https://www.timescale.com/blog/content/images/2021/09/Graph-5.jpg" alt="Median of a distribution is the 50th percentile" /></a></p>
+<blockquote>
+  <p>Source: <a href="https://www.timescale.com/blog/how-percentile-approximation-works-and-why-its-more-useful-than-averages/">How Percentile Approximation Works (and Why It’s More Useful Than Averages)
+</a></p>
+</blockquote>
+
+<p>As regards outliers, percentiles also help as we can perform operations on the data to filter out certain parts of the
+bucket
+(the too big or too small values) and sort them into buckets.</p>
+
+<p>An example is say we want to calculate the average values in a minute but we have an extremely high set of values, we
+can perform a <a href="https://www.investopedia.com/terms/t/trimmed_mean.asp">trimmed mean</a> operation which removes low and high
+values within a range of the mean thereby un-skewing the
+data distribution. Our percentile distribution can then be established on that result.</p>
+
+<p>Percentiles also provide a way to define thresholds, if we say 90% of values are below a certain value x, we can
+statistically
+identify values which are above or below our required working area, the 90th percentile(p90) of our distribution.</p>
+
+<h2 id="static-thresholds-1">Static Thresholds</h2>
+
+<p>In this section, I will primarily cover the law of large numbers and the mathematical basis of performing simulations as
+some systems thresholds can be obtained using this process.</p>
+
+<h3 id="the-law-of-large-numbers">The law of large numbers</h3>
+
+<p>This method is best for systems that have counter-like metric types with consistent data points within an interval.</p>
+
+<p>For example: I have a cron job that runs 3 times in a minute. However, there are multiple instances of this cron job
+running at any instance in time. We consider the availability to be the aggregate success rate of the cron jobs.
+We need to define a threshold for the aggregate availability of the cron jobs running, what’s a good value?</p>
+
+<p>With one cron job, we can either have 100%, 66.6%, 33.3% or 0% in a minute.</p>
+
+<h4 id="1-cron-job">1 cron job</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Successful runs</th>
+      <th>Total number of runs</th>
+      <th>Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>3</td>
+      <td>33.3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>66.6</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>3</td>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>With 2, we get ranges and duplicate values from 16.6% to 100%, some values repeating.</p>
+
+<h4 id="2-cron-job">2 cron job</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Successful runs</th>
+      <th>Total number of runs</th>
+      <th>Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>6</td>
+      <td>16.6</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>6</td>
+      <td>33.33</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>6</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>6</td>
+      <td>66.6</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>6</td>
+      <td>83.3</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>6</td>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>… and so on as more instances exist.</p>
+
+<p>However, this can be condensed into four states if we consider using a one minute aggregation period:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>w - Number of cronjob that all failed in a minute
+x - Number of cronjob that passed only once in a minute
+y - Number of cronjob that passed twice in a minute
+z - Number of cronjob that all passed in a minute
+</code></pre></div></div>
+
+<p>With this, we can represent the entire expression above as:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
+  <span class="o">&gt;</span> <span class="n">where</span> <span class="n">n</span> <span class="o">-</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">cronjob</span>
+</code></pre></div></div>
+
+<p>To calculate availability, what we realize is that if a metric passes only once in a minute (ref: <code class="language-plaintext highlighter-rouge">x</code>), we will always
+get 33%.
+If we have more instances of <code class="language-plaintext highlighter-rouge">x</code> , we will get 33% multiplied by the number of instances of x we get. The same theory
+works
+for <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">z</code>.</p>
+
+<p>The sum of all these values divided by the number of runs will give us the availability of the system, <code class="language-plaintext highlighter-rouge">w</code> is removed as
+it is 0’d out.</p>
+
+<p>Writing this into an equation presents us with a formula for our cron job systems availability:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">availability</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">+</span> <span class="p">(</span><span class="mi">33</span><span class="o">%</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">66</span><span class="o">%</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">100</span><span class="o">%</span> <span class="o">*</span> <span class="n">z</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span>
+             <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">+</span> <span class="n">x</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="n">y</span><span class="o">/</span><span class="mi">3</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>I include w here for completeness and empathy to the reader, it will always be 0</p>
+</blockquote>
+
+<p>Rehashing the table above with permutations of what the system can behave like, we get:</p>
+
+<h4 id="1-cron-job-1">1 cron job</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>w</th>
+      <th>x</th>
+      <th>y</th>
+      <th>z</th>
+      <th>n</th>
+      <th>Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>33.3333</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>66.6667</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="2-cron-jobs">2 cron jobs</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>w</th>
+      <th>x</th>
+      <th>y</th>
+      <th>z</th>
+      <th>n</th>
+      <th>Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>16.6667</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>33.3333</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>33.3333</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>66.6667</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>66.6667</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>83.3333</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>As you can begin to see, the values for availability can be pre-calculated for various scenarios based on the number of
+cronjob.
+However, we need to know a threshold that works for a (supposed) infinite number of cronjobs.</p>
+
+<p>This is where the law of large numbers come in.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In probability theory, the law of large numbers (LLN) is a mathematical theorem that states that the 
+average of the results obtained from a large number of independent and identical random samples converges
+to the true value, if it exists.[1] More formally, the LLN states that given a sample of independent and 
+identically distributed values, the sample mean converges to the true mean.
+</code></pre></div></div>
+
+<blockquote>
+  <p>Excerpt from
+Wikipedia: <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">https://en.wikipedia.org/wiki/Law_of_large_numbers</a></p>
+</blockquote>
+
+<p>Since these availability values are numerous, we will use percentiles to get a value representing some success rate we
+want to achieve.
+This can be that we want a threshold which signals that the p90 success rate of all cron jobs passed within a minute
+else we want to investigate.
+For this, we consider the p90 and higher percentile values of the various availability values.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">import</span> <span class="nn">concurrent.futures</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="n">percentiles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">,</span> <span class="mf">99.99</span><span class="p">,</span> <span class="mf">99.999</span><span class="p">]</span>
+<span class="n">avg_percentiles_sum_data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">percentiles</span><span class="p">))]</span>
+<span class="n">std_dev_percentiles_data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">percentiles</span><span class="p">))]</span>
+<span class="n">show_table_data</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="c1"># Number of jobs we want to simulatte
+</span><span class="n">number_of_jobs</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x_datapoints</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_jobs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pool</span> <span class="o">=</span> <span class="n">concurrent</span><span class="p">.</span><span class="n">futures</span><span class="p">.</span><span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">perms</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_datapoints</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+
+<span class="c1"># Helper method to time the run of every simulation
+</span><span class="k">def</span> <span class="nf">time_run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_num</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">use_num</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s"> took </span><span class="si">{</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="si">}</span><span class="s"> seconds to run"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">resp</span>
+
+
+<span class="c1"># This generates the permutations for w, x, y, z
+# It is very computationally expensive but
+# is required to generate the permutations
+# of all possible availability situations
+</span><span class="k">def</span> <span class="nf">gen_perms</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span> <span class="o">==</span> <span class="n">x</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">results</span>
+
+
+<span class="c1"># Wrapper method for the permutations above
+</span><span class="k">def</span> <span class="nf">future_run</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">time_run</span><span class="p">(</span><span class="n">gen_perms</span><span class="p">,</span> <span class="s">"gen_perms"</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+
+<span class="c1"># It is very expensive computationally to generate the sequence of values
+# I use a ProcessPoolExecutor to improve performance in this set
+# I cannot use a ThreadPoolExecutor as the Python GIL is a big problem
+# for cpu bound workloads :-(
+</span><span class="k">with</span> <span class="n">pool</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">executor</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">future_run</span><span class="p">,</span> <span class="n">x_datapoints</span><span class="p">):</span>
+        <span class="n">perms</span><span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+
+<span class="c1"># Loop over all the ranges of simulation instances
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x_datapoints</span><span class="p">:</span>
+    <span class="n">table_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">availability_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+    <span class="c1"># Here, we compute the availability using the pre-computed permutations
+</span>    <span class="k">def</span> <span class="nf">generate_series</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">perm</span>
+            <span class="n">availability</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">show_table_data</span><span class="p">:</span>
+                <span class="n">table_data</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">availability</span><span class="p">])</span>
+            <span class="n">availability_data</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">availability</span><span class="p">)</span>
+
+
+    <span class="n">time_run</span><span class="p">(</span><span class="n">generate_series</span><span class="p">,</span> <span class="s">"generate_series"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+
+    <span class="c1"># Here we compute each percentile as required for 1 to 5 9's
+</span>    <span class="k">def</span> <span class="nf">calculate_percentiles</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">percentile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">percentiles</span><span class="p">):</span>
+            <span class="n">percentile_dp</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">numpy</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">availability_data</span><span class="p">,</span> <span class="n">percentile</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">std_dev_percentiles_data</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">percentile_dp</span><span class="p">)</span>
+            <span class="n">avg_percentiles_sum_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_percentiles_sum_data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">percentile_dp</span>
+
+
+    <span class="n">time_run</span><span class="p">(</span><span class="n">calculate_percentiles</span><span class="p">,</span> <span class="s">"calculate_percentiles"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Using this theory and averaging over 10 simulations, we arrive at the following summary for different percentile
+values:</p>
+<blockquote>
+  <p>NOTE: Notice how having only 1 cron job will give us the same value as the percentile (data shortly below). With more
+instances, this skews
+with the amount of data present.
+In some companies, you would have an SLA/SLO requirement of x number of 9’s. I have also demoed the sample data
+under
+those requirements.
+This is a good way to mathematically define the availability of your system in respect to that</p>
+</blockquote>
+
+<h4 id="10-iterations-percentile-sample">10 iterations percentile sample</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>n</th>
+      <th>p90</th>
+      <th>p95</th>
+      <th>p99</th>
+      <th>p99.9</th>
+      <th>p99.99</th>
+      <th>p99.999</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>avg-1</td>
+      <td>90</td>
+      <td>95</td>
+      <td>99</td>
+      <td>99.9</td>
+      <td>99.99</td>
+      <td>99.999</td>
+    </tr>
+    <tr>
+      <td>avg-2</td>
+      <td>87.5</td>
+      <td>93.75</td>
+      <td>98.75</td>
+      <td>99.875</td>
+      <td>99.9875</td>
+      <td>99.9988</td>
+    </tr>
+    <tr>
+      <td>avg-3</td>
+      <td>84.6296</td>
+      <td>92.3148</td>
+      <td>98.463</td>
+      <td>99.8463</td>
+      <td>99.9846</td>
+      <td>99.9985</td>
+    </tr>
+    <tr>
+      <td>avg-4</td>
+      <td>83.4722</td>
+      <td>90.6944</td>
+      <td>98.1389</td>
+      <td>99.8139</td>
+      <td>99.9814</td>
+      <td>99.9982</td>
+    </tr>
+    <tr>
+      <td>avg-5</td>
+      <td>82.7778</td>
+      <td>89.8889</td>
+      <td>97.7778</td>
+      <td>99.7778</td>
+      <td>99.9778</td>
+      <td>99.9978</td>
+    </tr>
+    <tr>
+      <td>avg-6</td>
+      <td>81.9445</td>
+      <td>88.7963</td>
+      <td>97.3796</td>
+      <td>99.738</td>
+      <td>99.9738</td>
+      <td>99.9974</td>
+    </tr>
+    <tr>
+      <td>avg-7</td>
+      <td>81.1225</td>
+      <td>88.356</td>
+      <td>96.9444</td>
+      <td>99.6944</td>
+      <td>99.9694</td>
+      <td>99.9969</td>
+    </tr>
+    <tr>
+      <td>avg-8</td>
+      <td>80.3572</td>
+      <td>87.7282</td>
+      <td>96.4722</td>
+      <td>99.6472</td>
+      <td>99.9647</td>
+      <td>99.9965</td>
+    </tr>
+    <tr>
+      <td>avg-9</td>
+      <td>80.0706</td>
+      <td>87.0547</td>
+      <td>96.0412</td>
+      <td>99.5963</td>
+      <td>99.9596</td>
+      <td>99.996</td>
+    </tr>
+    <tr>
+      <td>avg-10</td>
+      <td>79.7302</td>
+      <td>86.6825</td>
+      <td>95.7704</td>
+      <td>99.5417</td>
+      <td>99.9542</td>
+      <td>99.9954</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In this instance, after 10 iterations, we begin to notice very small deviations as more and more instances become
+present.</p>
+
+<p>We can confirm convergence by observing the standard deviation across percentile values for a number of iterations.</p>
+
+<p>Below, we increase the simulation from 10 to 100 instances and up to 250 instances.</p>
+<blockquote>
+  <p>Observe that the std_dev across percentiles falls as we compute more iterations.
+This means the law of large numbers is guaranteed to work and we are closer to our threshold</p>
+</blockquote>
+
+<h4 id="100-iterations">100 iterations</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>percentile</th>
+      <th>std_dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>90</td>
+      <td>2.55479</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>2.7893</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>2.47523</td>
+    </tr>
+    <tr>
+      <td>99.9</td>
+      <td>1.48893</td>
+    </tr>
+    <tr>
+      <td>99.99</td>
+      <td>0.662349</td>
+    </tr>
+    <tr>
+      <td>99.999</td>
+      <td>0.176516</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/law_of_large_numbers_100.png" alt="" /></p>
+
+<h4 id="150-iterations">150 iterations</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>percentile</th>
+      <th>std_dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>90</td>
+      <td>2.18544</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>2.40563</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>2.19908</td>
+    </tr>
+    <tr>
+      <td>99.9</td>
+      <td>1.41627</td>
+    </tr>
+    <tr>
+      <td>99.99</td>
+      <td>0.713028</td>
+    </tr>
+    <tr>
+      <td>99.999</td>
+      <td>0.258509</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/law_of_large_numbers_150.png" alt="" /></p>
+
+<h4 id="200-iterations">200 iterations</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>percentile</th>
+      <th>std_dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>90</td>
+      <td>1.94396</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>2.14987</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>1.99772</td>
+    </tr>
+    <tr>
+      <td>99.9</td>
+      <td>1.33502</td>
+    </tr>
+    <tr>
+      <td>99.99</td>
+      <td>0.718952</td>
+    </tr>
+    <tr>
+      <td>99.999</td>
+      <td>0.298266</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/law_of_large_numbers_200.png" alt="" /></p>
+
+<h4 id="250-iterations">250 iterations</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>percentile</th>
+      <th>std_dev</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>90</td>
+      <td>1.76979</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>1.96395</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>1.8438</td>
+    </tr>
+    <tr>
+      <td>99.9</td>
+      <td>1.26232</td>
+    </tr>
+    <tr>
+      <td>99.99</td>
+      <td>0.708878</td>
+    </tr>
+    <tr>
+      <td>99.999</td>
+      <td>0.31958</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/law_of_large_numbers_250.png" alt="" /></p>
+
+<p>Therefore, we could summarise the following observations for this cron job system:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>percentile</th>
+      <th>threshold</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>90</td>
+      <td>70 - 75</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>75 - 80</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>85 - 90</td>
+    </tr>
+    <tr>
+      <td>99.9</td>
+      <td>95 - 100</td>
+    </tr>
+    <tr>
+      <td>99.99</td>
+      <td>97.5 - 99.5</td>
+    </tr>
+    <tr>
+      <td>99.999</td>
+      <td>99.5 - 99.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Any value around those ranges would cover out of band behaviours for our system depending on if we monitor with a higher
+or
+lower bound threshold.</p>
+
+<h3 id="aggregate-functions-of-percentiles">Aggregate functions of percentiles</h3>
+
+<p>As with the case with law of large numbers where we apply the average of percentile values across the model of our
+system
+We can also define similar methods for analysis using the following aggregate functions:</p>
+
+<ul>
+  <li>Min</li>
+  <li>Max</li>
+  <li>Range</li>
+  <li>Mode</li>
+  <li>Count</li>
+</ul>
+
+<p>As with range, this is analogous to standard deviation but some metrics deviate from time to time with no stable mean.
+What we look for is a sharp change in these ranges noticed during the systems behaviour outside our control band.</p>
+
+<h2 id="non-static-thresholds-1">Non-static Thresholds</h2>
+
+<p>In this section, I discuss methods for identifying behaviours in systems that have no defined manner of execution.</p>
+
+<p>You will <em>(realistically)</em> need to define your own monitoring logic with these methods so it is very
+implementation-specific.</p>
+
+<h3 id="curve-fitting">Curve fitting</h3>
+
+<blockquote>
+  <p>NOTE: I borrow this approach from an article by a great friend: <a href="https://opeonikute.dev/">Opeyemi Onikute</a>, this
+thought process would not be possible without his</p>
+
+  <p>featuring <a href="https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods">article</a>
+from Cloudflare</p>
+</blockquote>
+
+<p>Let’s define the hypothetical case we initially mentioned:</p>
+
+<p><strong>Problem</strong>: We want to monitor and alarm on the number of purchases made by users to our business.</p>
+
+<p><strong>Behavior</strong>: We have peak and non-peak hours which follow a sinusoidal form as a result.</p>
+
+<p><strong>Business Case</strong>: We want to know if we have surpassed our usual average orders to scale up/down efforts to meet these
+purchases in advance, how can we know when to do this?</p>
+
+<p><strong>Technical Summary</strong>: It is a lot harder to define as we have no baseline. The number of purchases made by users is
+random and not bounded. All we know is it peaks and drops around certain times of the day.</p>
+
+<blockquote>
+  <p>The first question I asked myself whilst writing this was how to get data to showcase what the folks on the
+CloudFlare team simulated. I opted for
+a more idealistic approach to show the method so there is implied fit as a result :-(</p>
+</blockquote>
+
+<p>In this case, we assume we have a system with the following metric pattern, a sinusoid with some alternating peaks and
+troughs</p>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/curve_fitting_without_fit.png" alt="" /></p>
+
+<p>During the process of testing the waveform, we try to align it with the following sine waveform</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y = a * sin(2 * b * x) + c 
+</code></pre></div></div>
+
+<p>To perform the alignment, what we do is perform a curve fit on the existing data using the approximate
+waveform we have deduced based on our waveforms behaviour.</p>
+
+<p>How we do so is by using the curve_fit method provided by the <code class="language-plaintext highlighter-rouge">scipy.optimize</code> package.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is the function we are trying to fit to the data.
+</span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span>
+    <span class="c1"># Make the data entirely positive
+</span>    <span class="n">result</span><span class="p">[</span><span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Generate some random data
+</span><span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">y_noise</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">xdata</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">y_noise</span>
+
+<span class="c1"># The actual curve fitting happens here
+</span><span class="n">optimizedParameters</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">opt</span><span class="p">.</span><span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>
+<span class="n">best_fit_data</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="o">*</span><span class="n">optimizedParameters</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This method of performing a curve_fit can be a hit or miss implying that the corresponding waveform does
+not blend into the metric data for the system we are looking to monitor.</p>
+
+<p>Further from here, I use the following abbreviations and this is what their values connote: <br />
+<strong>std_dev</strong>: Standard Deviation, smaller is better <br />
+<strong>chisq_gf</strong>: percent: Chi Squared Goodness of Fit Percentage, larger is better</p>
+
+<p>Capturing this deviation for a fit or unfit is done using the std_dev of the dataset. We can reasonably
+identify a good fit when we have a std_dev which falls below 1. We can also compute the goodness of fit by computing the
+chi squared goodness of fit test to measure how aligned fit is.</p>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/chisq.png" alt="" /></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The different values are the observed (Yi), expected (f(Xi)) and uncertainty. 
+In this theory, the closer the chi-square value to the length of the sample, the better the fit is. 
+Chi-squared values that are a lot smaller than the length represent an overestimated uncertainty and much larger represent a bad fit.
+</code></pre></div></div>
+<blockquote>
+  <p>Source: <a href="https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods">https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods</a></p>
+</blockquote>
+
+<p>In computing the chi squared goodness of fit as a percentage, we apply the following method on our fitted and normal
+data</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># How well does our fit work with the function
+</span><span class="k">def</span> <span class="nf">goodness_of_fit</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">chisq</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(((</span><span class="n">observed</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">observed</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Present the chisq value percentage relative to the sample length
+</span>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">observed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">chisq</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Excerpt
+from <a href="https://blog.cloudflare.com/how-the-cloudflare-global-network-optimizes-for-system-reboots-during-low-traffic-periods">cloudflare</a></p>
+</blockquote>
+
+<p>We observe a bad fit behaviour when we simulate what is an unfit scenario with the curve fitting procedure for our data.
+In this setting, we arrive at a std_dev &gt; 1 and a low chisq_gf score below 1.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>std_dev</th>
+      <th>chisq_gf percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.2100734691363195</td>
+      <td>0.33645525625505</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/curve_fitting_with_unfit.png" alt="" /></p>
+
+<p>Pulling this information however with a better fit on the dataset gives the following plot of the dataset along with
+a representation of the chisq_gf and std_dev</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>std_dev</th>
+      <th>chisq_gf percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.6332891775170658</td>
+      <td>71.18450196259667</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/curve_fitting_with_fit.png" alt="" /></p>
+
+<p>In defining thresholds for this instance, one may either use the std_dev check of 1 to confirm out of bounds behaviour,
+If there’s a low standard deviation (close to 1 or lower), it suggests that the data points tend to be closer to the
+mean, indicating low variance.
+One can also use the chisq_gf value fit within the requirement of choice,
+checking if it is above the threshold of choice which can be close to 100.</p>
+
+<p>I also consider an approach with using the difference in the expected vs normal waveform, this follows on the
+earlier discussion about ranges to establish a control band. This however is a subjective opinion, teams would be good
+to run further tests with this approach before applying on production systems.
+<img src="https://raw.githubusercontent.com/tiemma/exploring-the-math-of-thresholds/master/curve_fitting_with_fit_difference.png" alt="" /></p>
+
+<p>As a follow-up with our test to define when to upscale or downscale, this is now possible to establish on a rolling
+basis with
+the various statistics to measure how this otherwise random system can now be scaled using:</p>
+
+<ul>
+  <li>Standard Deviation</li>
+  <li>Chi Squared Percentages</li>
+  <li>Predicted/Normal Differences</li>
+</ul>
+
+<blockquote>
+  <p>More interested folks can consider the Z-Score as a follow-up on standard deviation</p>
+</blockquote>
+
+<h3 id="prediction-intervals-machine-learning">Prediction Intervals (Machine Learning)</h3>
+
+<p>Another method for inferring non-static thresholds on metrics is via Prediction Intervals. I used this previously in my
+time
+at AWS, this is available as a public service on CloudWatch
+called <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html">Anomaly Detection</a></p>
+
+<p><img src="https://docs.aws.amazon.com/images/AmazonCloudWatch/latest/monitoring/images/Anomaly_Detection_Graph6.png" alt="Prediction bands identifying spikes in metric observations" /></p>
+
+<p>I also found another interesting article about Prediction Intervals which is a similar line of thought. It is written
+by <a href="https://www.linkedin.com/in/marco-cerliani-b0bba714b/?originalSubdomain=it">Marco Celiani</a>. You can read more about
+the process from his medium article
+here: <a href="https://archive.is/Od7lA">https://towardsdatascience.com/add-prediction-intervals-to-your-forecasting-model-531b7c2d386c</a></p>
+
+<p><img src="https://archive.is/Od7lA/dd70f2bbbb690123cc870f318def3ee010119a9f.png" alt="Prediction intervals" /></p>
+
+<p>I do not go into too much detail here as the author provided a nice jupyter notebook with details of his implementation
+process. You can find that
+here: <a href="https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Prediction_Intervals/Prediction_Intervals.ipynb">https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Prediction_Intervals/Prediction_Intervals.ipynb</a>.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>There are other smart ways to define thresholds and most of the content here would not align with it. Not every system needs the
+extensive process done here to put a line on a graph. However, this article does stress on some situations where a bit
+more
+careful thought into the research process can help with aligning business cases with the thresholds we want to achieve.</p>
+
+<p>All the simulation code and images generating whilst drafting this article can be found on this
+repository, <a href="https://github.com/tiemma/exploring-the-math-of-thresholds">exploring-the-math-of-thresholds</a>, do give it a
+star if
+this was a great read.</p>
+<blockquote>
+  <p>NOTE: The code in there is better than spaghetti but pasta is pasta :-P</p>
+</blockquote>
+
+
+
+    </section>
+    <footer>
+        
+        <p>This project is maintained by <a href="https://github.com/tiemma">tiemma</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </footer>
+</div>
+<script src="/assets/js/scale.fix.js"></script>
+</body>
+</html>
