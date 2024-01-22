@@ -43,7 +43,20 @@ footer {
     position: inherit;
 }
 
+
+h2 {
+    padding-top: 2rem;
+}
+
+h3 {
+    padding-top: 1rem;
+}
+
 @media print, screen and (min-width: 960px) {
+    p {
+        font-size: 1.2rem;
+    }
+
     .wrapper {
         width: auto;
         padding: 4rem;
@@ -54,14 +67,6 @@ footer {
         margin: auto;
         width: min-content;
         float: none;
-    }
-
-    h2 {
-        padding-top: 2rem;
-    }
-
-    h3 {
-        padding-top: 1rem;
     }
 
     section img {
