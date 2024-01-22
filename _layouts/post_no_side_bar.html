@@ -49,6 +49,8 @@
         <p class="view">by {{ page.author | default: site.author }}</p>
 
         {{content}}
+        {% include social_media_share.html %}
+
 
         {% if page.tags %}
         <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>

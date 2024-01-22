@@ -44,6 +44,18 @@ footer {
 }
 
 @media print, screen and (min-width: 960px) {
+    .wrapper {
+        width: auto;
+        padding: 4rem;
+        padding-top: 0;
+    }
+
+    header {
+        margin: auto;
+        width: min-content;
+        float: none;
+    }
+
     h2 {
         padding-top: 2rem;
     }
@@ -61,7 +73,6 @@ footer {
     }
 
     section {
-        float: left;
         width: auto;
     }
 

@@ -18,7 +18,7 @@ the metric name which is always a string and the value is a number, this number 
 cpu_usage_over_1_minute => 40. Metrics help us gather information about the behavior of our systems which we can use to
 define some contract (SLA/SLO) in terms of monitoring the customer experience.
 
-At some time last year, I was working on an elusive problem on my team with a simple summary: "How do we know what an
+At some time last year, I was working on an elusive problem with a simple summary: "How do we know what an
 ideal threshold should be based on the metrics we collect?"
 
 [![Tweet I posted during my research process for the problems this article details](/images/@TiemmaBakare_1701248898264646053_tweetcapture.png)](https://x.com/TiemmaBakare/status/1701248898264646053?s=20)
@@ -122,7 +122,9 @@ the data is distributed.
 The k-th percentile is the value at which k percent of the data series falls at or below that value.
 For example, if we shuffle data containing numbers 0–100 equally into 100 buckets and we want to find the median, we can
 take the 50th percentile, p50 to arrive at this value which is 50. We can also arrive at the max value by equally taking
-the 100th percentile which is p100.
+the 100th percentile which is p100. This is because the distribution is symmetric (equally spaced on both sides of the median, 50 each). 
+Some distributions can be skewed/non-uniform, exponential etc and percentiles provide a way to assess the data within these 
+distributions.
 
 [![Median of a distribution is the 50th percentile](https://www.timescale.com/blog/content/images/2021/09/Graph-5.jpg)](https://www.timescale.com/blog/how-percentile-approximation-works-and-why-its-more-useful-than-averages/)
 > Source: [How Percentile Approximation Works (and Why It’s More Useful Than Averages)
@@ -210,11 +212,9 @@ it is 0'd out.
 Writing this into an equation presents us with a formula for our cron job systems availability:
 
 ```python
-availability = 100 * (w + (33% * x) + (66% * y) + (100% * z)) / n
-             = 100 * (w + x/3 + 2y/3 + z) / n
+availability = 100 * ((0% * w) + (33% * x) + (66% * y) + (100% * z)) / n
+             = 100 * (x/3 + 2y/3 + z) / n
 ```
-
-> I include w here for completeness and empathy to the reader, it will always be 0
 
 Rehashing the table above with permutations of what the system can behave like, we get:
 
