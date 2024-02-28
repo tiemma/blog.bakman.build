@@ -3,7 +3,6 @@ absolute_url: https://blog.bakman.build
 ---
 
 # Technical Articles
-- Feb 03, 2024 [Politics: For the Rich or the Poor](./blogs/politics-for-the-rich-or-the-poor.md)
 - Jan 18, 2024 [Exploring the Math of Thresholds](./blogs/exploring-the-math-of-thresholds.md)
 - Feb 28, 2021 [Why is Go PANICking](https://medium.com/@tiemma/why-is-go-panicking-31ba2351986b)
 - Mar 30, 2020 [Solving Project Euler Problem 25](https://medium.com/an-idea/solving-project-euler-problem-25-4318b8df8bf7)
@@ -13,6 +12,7 @@ absolute_url: https://blog.bakman.build
 - May 17, 2018 [File systems — An in-depth intro](https://medium.com/consonance/file-systems-an-in-depth-intro-75de31a0e50a)
 
 # Musings
+- Feb 03, 2024 [Politics: For the Rich or the Poor](./blogs/politics-for-the-rich-or-the-poor.md)
 - Oct 04, 2023 [Delivery Matters More](https://medium.com/@tiemma/delivery-matters-more-efe19c1d7491)
 - Oct 02, 2023 [Some things don’t need to change (and that’s fine)](https://medium.com/@tiemma/some-things-dont-need-to-change-and-that-s-fine-ce53e854a33a)
 - Feb 10, 2020 [Starting off a new Linux Paradigm](https://medium.com/linux-lagos/starting-off-a-new-linux-paradigm-890019ab1ef6)
