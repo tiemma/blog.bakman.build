@@ -20,7 +20,7 @@ Maybe the "age" factor comes to play like our once young self excited to play in
 I am of the belief creatives are folks that never lose their "child-like" freedom, they express both in character and form, a nuanced erratic pattern that we once knew - they are grown children in adult bodies like peter pan. 
 
 My next question wandered what then becomes of the outside folks, those who did grow up. I think we all become adults by sacrificing some of that child like creativity for order and structure.
-As we were growing up, we all have in some form being described as creative but not so much now. Maybe you had this once in academics or some other form, does intelligence come to play a factor? All these are unanswered questions.
+As we were growing up, we all have in some form been described as creative but not so much now. Maybe you had this once in academics or some other form, does intelligence come to play a factor? All these are unanswered questions.
 
 As earlier noted, I believe the creativity we have in adulthood comes from our child like self who discovered talents early and kept those "creative personalities" growing up, they are still as joyous and flow in the regard their creativity spurs.
 The more creative they are, the more child like they appear to be in expression. This should not be confused with the "mature" manner of expression, the creatives just showcase a version of its form that orderly folks reminisce.
