@@ -45,7 +45,7 @@ one party, or the promise thereof, is the price for which the
 promise of the other is bought, and the promise thus given for
 value is enforceable." (Pollock on Contracts, 8th ed., p. 175.)
 
-The principle of detrimental reliance therefore comes into play in extending the definition of consideration to cover that the offer of forebearance from one party in relation to the acceptance and performance of such forbearance in relation to a promise from another party
+The principle of detrimental reliance therefore comes into play in extending the definition of consideration to cover that the offer of forebearance from one party in respect to the acceptance and performance of such forbearance for a promise from another party
 without inherent benefit to the promisor can pose as sufficient consideration [^4]. However, the consideration for such promise must move from the person the promise is made to [^5], it need not be done to the person who offered the promise [^5a] or a third party not privy to the contract at its creation [^4][^5b].
 
 We may then further conclude that what defines consideration is the process of establishing benefit and detriment with sufficient value in the eyes of the law amongst parties under contracting terms.
@@ -99,7 +99,7 @@ form of non-compulsory condition may also not be performed leading to a breach o
 However, these two instances apply once the contract has been established and intention to create legal relations are satisfied. 
 What happens if the conditions leading to such situation do not yield sufficient consideration in the eyes of the law?
 
-To begin, we must firstly note that if a contract is made in a deed, it need not be supported by sufficient consideration [10]. With established precedence, we will now consider if sufficient consideration stands as a condition for the enforcement of specific performance.
+To begin, we must firstly note that if a contract is made in a deed, it need not be supported by sufficient consideration [^10]. With established precedence, we will now consider if sufficient consideration stands as a condition for the enforcement of specific performance.
 
 Treitel, Law of Contracts answers this bluntly [^5e]
 > In English Law, a promise is not, as a general rule, binding as a contract unless it is either made in a deed or supported 
