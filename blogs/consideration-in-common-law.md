@@ -192,7 +192,7 @@ Treitel, Law of Contracts notes two critical questions on the matter of consider
 These two questions are applicable and tested under Hudson v Hathaway [^19], Thomas v Thomas [^7], Easton v Kenyon [^11] and others. Equity under consideration is established through its remedies for promissory estoppel enforcing performance for aggrieved parties under detrimental reliance, 
 where nominal damages (alone) does not provide for equity. 
 
-In a future time, the law based on these principles and established UK precedence will continue to establish the requirement of applying consideration as a condition in defining a contract under common law.
+In a future time, the law based on these principles and established UK precedence will continue the requirement of applying consideration as a condition in defining a contract under common law.
 
 
 # References
