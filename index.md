@@ -11,6 +11,9 @@ absolute_url: https://blog.bakman.build
 - May 20, 2018 [Proxies — An in-depth intro](https://medium.com/consonance/proxies-an-in-depth-intro-4bb569326a34)
 - May 17, 2018 [File systems — An in-depth intro](https://medium.com/consonance/file-systems-an-in-depth-intro-75de31a0e50a)
 
+# Legal
+- May 12, 2024 [Consideration in Common Law](./blogs/consideration-in-common-law.md)
+
 # Musings
 - Apr 14, 2024 [Creativity and Order](./blogs/creativity-and-order.md)
 - Feb 03, 2024 [Politics: For the Rich or the Poor](./blogs/politics-for-the-rich-or-the-poor.md)

@@ -52,6 +52,15 @@ h3 {
     padding-top: 1rem;
 }
 
+blockquote {
+    border-left: 4px solid #e5e5e5;
+    font-weight: bold;
+}
+
+sup {
+    padding-right: 0.2rem;
+}
+
 @media print, screen and (min-width: 960px) {
     p {
         font-size: 1.2rem;
