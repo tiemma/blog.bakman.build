@@ -170,7 +170,7 @@ contribute, I won't do so forever.”
 The courts on review of emails from Mr Hudson upheld an email communication as consideration for the disposition of such equity in the property from Mr Hudson as noted in section 53 (1)(c) of the Law of Property Act 1925 [^20]
 > (c)a disposition of an equitable interest or trust subsisting at the time of the disposition, must be in writing signed by the person disposing of the same, or by his agent thereunto lawfully authorised in writing or by will.
 
-This case is significant as it opens up a review for how a promise can establish the basis for disposition without the need for detrimental reliance to be fully derived. Despite this, a promise can be sufficient consideration and the courts in their process adequately cater for such evolving conditions.
+This case is significant as it opens up a review for how a promise communicated via email can establish an oral contract giving the basis for disposition without the need for detrimental reliance to be fully derived. Despite this, a promise can be sufficient consideration and the courts in their process adequately cater for such evolving conditions.
 
 The courts may also choose to apply recission or variation of the terms of the contract to suit the current situation. This again raises the floodgates argument on what the adequate conditions the 
 courts may apply when deciding if a party is available of these remedies and how applicable they apply in cases where substantial performance is enough as seen in Easton v Kenyon [^11].
