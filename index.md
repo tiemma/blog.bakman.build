@@ -15,6 +15,7 @@ absolute_url: https://blog.bakman.build
 - May 12, 2024 [Consideration in Common Law](./blogs/consideration-in-common-law.md)
 
 # Musings
+- June 11, 2024 [Thinking Fast and Slow](./blogs/thinking-fast-and-slow.md)
 - Apr 14, 2024 [Creativity and Order](./blogs/creativity-and-order.md)
 - Feb 03, 2024 [Politics: For the Rich or the Poor](./blogs/politics-for-the-rich-or-the-poor.md)
 - Oct 04, 2023 [Delivery Matters More](https://medium.com/@tiemma/delivery-matters-more-efe19c1d7491)
