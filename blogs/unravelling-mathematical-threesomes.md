@@ -8,7 +8,7 @@ tags: ["pythagoras", "quadratic formula", "pythagorean triples"]
 > Title is inspired by a recent Netflix watch: [The Secret Diary of a Call Girl](https://www.netflix.com/ie/title/70136150?source=35)
 
 # Introduction
-Dearest Gentle Reader, when I was in primary school, some 10+ years that I can't accurately calculate, I had some assignment that involved calculating a single value out a pythagorean triple, two of the values were provided for ease.
+Dearest Gentle Reader, when I was in primary school some 10+ years that I can't accurately calculate again (the irony of it all), I had some assignment that involved calculating a single value out a pythagorean triple, two of the values were provided for ease.
 
 ![img.png](../images/pythagorean_two_values.png)
 
@@ -34,14 +34,14 @@ $$a^2 + b^2 = c^2$$
 
 
 # Starting simple with natural numbers
-Natural numbers are all positive numbers excluding 0. This defines a metric system we can understand representing a valid triangle would be constrained by.
+Natural numbers are all positive numbers excluding 0. This defines a metric system we can understand representing what a valid triangle would be constrained by.
 Therefore, all numbers for the start of this exercise will be bounded within the [natural number space](https://en.wikipedia.org/wiki/Natural_number).
 
 {% raw %}
 \\[ \forall b \in {\displaystyle \mathbb {N} } \\]
 {% endraw %}
 
-{%raw%}a{%endraw%} will represent either the adjacent or opposite, it does not matter which and {%raw%}c{%endraw%} will be the hypotenuse/diagonal.
+{%raw%}$$a$${%endraw%} will represent either the adjacent or opposite, it does not matter which and {%raw%}$$c$${%endraw%} will be the hypotenuse/diagonal.
 To ease out the discussion in later parts of this article, these will exist in the positive [real number space](https://en.wikipedia.org/wiki/Real_number).
 
 {% raw %}
@@ -55,7 +55,7 @@ As earlier noted, a pythagorean expression is represented by
 $$a^2 + b^2 = c^2$$
 {% endraw %}
 
-If we take any edge of the triangle, the hypotenus or the adjacent as the subject of the formula, we arrive at:
+If we take any edge of the triangle asides the hypotenuse, the subject of the formula we arrive at is:
 {% raw %}
 $$b^2 = c^2 - a^2$$
 {% endraw %}
@@ -73,9 +73,13 @@ $$c + a = b^2$$
 $$c - a = 1$$
 {% endraw %}
 
-In doing so, I define some expression that assumes there is a minimum distance {% raw %} $$k$$ {% endraw %} of 1 between any of the sets. This will be pivotal in later exercises on defining what I call a "pythagorean distance".
+In doing so, I also define some expression that assumes there is a minimum distance {%raw%}$$k$${%endraw%} which is a whole positive number that is based on the difference of c and a.
 
-For this example with a "pythagorean distance" of 1, we will sum the expression to eliminate {% raw %} $$a$$ {% endraw %} and compute the expression for the diagonal.
+{% raw %}\\[ \forall k \in {\displaystyle \mathbb {N} } \ni k: k = c - a \\] {% endraw %}
+
+In this case, we start off with 1 between the hypotenuse and the opposite. This will be pivotal in later exercises on defining what I call a "pythagorean distance" which I refer to as {%raw%}$$k$${%endraw%}.
+
+For this example with a "pythagorean distance" of 1, we will sum the expression to eliminate {% raw %} $$a$$ {% endraw %} and compute the expression for the hypotenuse.
 
 {% raw %}
 $$c + a = b^2$$
@@ -111,14 +115,16 @@ $$c - a = 1$$
 
 When considering the equalities, we must enforce that {%raw%}$$c + a > c - a$${%endraw%}. This is because in our natural number space without 0, we cannot have an addition greater or equal to a subtraction.
 
-Substituting that {%raw%}$$c + a = b ^ 2$${%endraw%} and  {%raw%}$$c - a = 1$${%endraw%}, we have that {%raw%}$$b ^ 2 > 1$${%endraw%}, implying {%raw%}$$b > 1$${%endraw%}
+Substituting that {%raw%}$$c + a = \frac{b^2}{k}$${%endraw%} and  {%raw%}$$k = c - a = 1$${%endraw%}, we have that {%raw%}$$b ^ 2 > 1$${%endraw%}, implying {%raw%}$$b > 1$${%endraw%}
 
 {% raw %}
 \\[ \forall a,c \in {\displaystyle \mathbb {N} }, c+a > c-a  \\]
 
-\\[ \therefore b^2 > 1 \\]
+\\[ \therefore \frac{b^2}{k} > k \\]
 
-\\[ \therefore b > 1 \\]
+\\[ \therefore b^2 > k^2 \\]
+
+\\[ \therefore b > k \\]
 {% endraw %}
 
 # Testing the assertions
@@ -242,7 +248,7 @@ Using our fancy script, we regenerate the values for our table and we now have t
 {% endfor %}
 </table>
 
-We also notice that in this even case, the odd sample for 2 in the earlier table when multiplied by 2 gives us the even values for the now established whole value of 2 in the even table.
+We also notice that in this even case, the odd sample for 2 in the earlier table `1.5,2,2.5` when multiplied by 2 gives us the even values `3,4,5` for the now established whole value of 2 in the even table.
 This is an occurrence we will discuss later in this blog, pythagorean triples can be commutative where multiples of the linear values also correlate to the outcome of the quadratic expressions.
 
 # Establishing finding pythagorean triples with pythagorean distances
@@ -250,10 +256,10 @@ When thinking about pythagorean triples, we usually have a hard time figuring ou
 
 With the single value {%raw%}$$b$${%endraw%} which can exist with any distance from {%raw%}$$a$${%endraw%} and {%raw%}$$c$${%endraw%}, {%raw%}$$a$${%endraw%} and {%raw%}$$c$${%endraw%} will always have a fixed distance from each other.
 
-With this, you arrive at a conclusion where the triples can be established with some pythagorean distance k such that the other members of this threesome satisfy each other (lol!)
+With this, you arrive at a conclusion where the triples can be established with some pythagorean distance {%raw%}$$k$${%endraw%} such that all the members of this threesome satisfy each other (lol!)
 
 {%raw%}
-\\[ \forall b \in {\displaystyle \mathbb {N} }, \exists \;a \;,\; c \in {\displaystyle \mathbb {R} } \;forming \;a \;pythagorean \;triple \;\ni \; k \in {\displaystyle \mathbb {N} } \ni \; \\{k = c - a \\} \\]
+\\[ \forall b \in {\displaystyle \mathbb {N} }, \exists \;a \;,\; c \in {\displaystyle \mathbb {R} } \;forming \;a \;pythagorean \;triple \;\ni \; k \in {\displaystyle \mathbb {N} } \; \\{k = c - a \\} \\]
 
 
 
@@ -284,7 +290,7 @@ Taking {%raw%}$$k = 3$${%endraw%} as we have done for 1  and 2, we arrive at the
 From here, we have established a formula to calculate any pythagorean triple within the real number space, however satisfying that the numbers are in the natural number space is experimental and I cover my approach to defining a boundary at the end of this article.
 
 # Multiples of pythagorean triples
-Within the same pythagorean distance {%raw%}k{%endraw%}, you will find that several series of digits repeat. This means that pythagorean triples repeat within different sets as multiples.
+Within the same pythagorean distance {%raw%}$$k$${%endraw%}, you will find that several series of digits repeat. This means that pythagorean triples repeat within different sets as multiples.
 
 For example, within {%raw%}$$k=4$${%endraw%}, we get the following sequence
 <table>
@@ -318,15 +324,15 @@ However, you will notice 12 has another set of pythagorean triples different fro
 16,12,20
 ```
 
-When pythagorean triples run, you can have multiple sets within the natural number space with different pythagorean distances. In this case, both examples have k with values of 8 and 4 respectively when {%raw%}$$b=12$${%endraw%}.
+When pythagorean triples run, you can have multiple sets within the natural number space with different pythagorean distances. In this case, both examples have {%raw%}$$k$${%endraw%} with values of 8 and 4 respectively when {%raw%}$$b=12$${%endraw%}.
 
-Taking another from {%raw%}k=2{%endraw%} and multiplying it by 2 for example gives one example on the table
+Taking another from {%raw%}$$k=2$${%endraw%} and multiplying it by 2 for example gives one example on the table
 ```angular2html
 3,4,5 -> 6,8,10
 ```
 
 What you will find in examining pythagorean triples using the pythagorean distance approach is that triples will repeat and they are multiplicative reflections of each other.
-Some will exist within the same distance if the distance repeats or extend into other versions of {%raw%}k{%endraw%}.
+Some will exist within the same distance if the distance repeats or extend into other versions of {%raw%}$$k$${%endraw%}.
 
 # Prime behaviour for deriving original pythagorean triples
 In succession to the chapter on repeating triples, you will find that getting new pythagorean triples is a matter of computing prime versions of {%raw%}$$b$${%endraw%} and establishing multiples of the related triple combinations.
