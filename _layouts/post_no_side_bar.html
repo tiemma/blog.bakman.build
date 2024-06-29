@@ -13,7 +13,7 @@
     <![endif]-->
     {% include head-custom.html %}
     <link rel="shortcut icon" type="image/x-icon" href="{{"/images/icon.png?v=" | append: site.github.build_revision }}">
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -65,5 +65,15 @@
     </footer>
 </div>
 <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
+<script>
+    // Define the selector for the elements you want to target
+    let elements = document.querySelectorAll('.share-buttons a');
+
+    // Iterate through each element
+    elements.forEach(element => {
+        // Replace all instances of 'github.com' with 'website.com'
+        element.innerHTML = element.innerHTML.replace(/github\.com/g, 'blog.bakman.build');
+    });
+</script>
 </body>
 </html>
