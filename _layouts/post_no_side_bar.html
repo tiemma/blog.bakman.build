@@ -66,14 +66,18 @@
 </div>
 <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
 <script>
-    // Define the selector for the elements you want to target
-    let elements = document.querySelectorAll('.share-buttons a');
+    (() => {
+        // Define the selector for the elements you want to target
+        let elements = document.querySelectorAll('.share-buttons a');
 
-    // Iterate through each element
-    elements.forEach(element => {
-        // Replace all instances of 'github.com' with 'website.com'
-        element.innerHTML = element.innerHTML.replace(/github\.com/g, 'blog.bakman.build');
-    });
+        // Iterate through each element
+        elements.forEach(element => {
+            // Replace all instances of 'github.com' with 'website.com'
+            console.log(element.href);
+            element.href = element.href.replace(/github\.com/g, 'blog.bakman.build');
+            console.log(element.href);
+        })
+    })();
 </script>
 </body>
 </html>
