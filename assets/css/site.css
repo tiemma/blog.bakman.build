@@ -57,6 +57,13 @@ blockquote {
     font-weight: bold;
 }
 
+hr {
+    width: 14rem;
+    text-align: center;
+    margin-left: calc(50% - 7rem);
+    height: 0.1rem;
+}
+
 sup {
     padding-right: 0.2rem;
 }

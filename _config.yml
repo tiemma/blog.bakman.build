@@ -16,6 +16,7 @@ readme_index:
   with_frontmatter: false
 gist:
   noscript: false
+markdown: kramdown
 kramdown:
   math_engine: mathjax
   syntax_highlighter: rouge

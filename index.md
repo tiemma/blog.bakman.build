@@ -3,6 +3,7 @@ absolute_url: https://blog.bakman.build
 ---
 
 # Technical Articles
+- June 28, 2024 [Unravelling mathematical threesomes](./blogs/unravelling-mathematical-threesomes.md)
 - Jan 18, 2024 [Exploring the Math of Thresholds](./blogs/exploring-the-math-of-thresholds.md)
 - Feb 28, 2021 [Why is Go PANICking](https://medium.com/@tiemma/why-is-go-panicking-31ba2351986b)
 - Mar 30, 2020 [Solving Project Euler Problem 25](https://medium.com/an-idea/solving-project-euler-problem-25-4318b8df8bf7)
