@@ -73,9 +73,7 @@
         // Iterate through each element
         elements.forEach(element => {
             // Replace all instances of 'github.com' with 'website.com'
-            console.log(element.href);
             element.href = element.href.replace(/github\.com/g, 'blog.bakman.build');
-            console.log(element.href);
         })
     })();
 </script>
