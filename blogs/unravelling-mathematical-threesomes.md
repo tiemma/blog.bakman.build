@@ -341,21 +341,31 @@ All of this can be automated using the [Sieve of Eratosthenes](https://www.geeks
 
 
 # Weird patterns in getting whole triples
-> This addition is inconclusive, incorrect on some cases and left for reader interest
+To establish whole triples, one must arrive a case where {%raw%}$$c$${%endraw%} and {%raw%}$$a$${%endraw%} are both odd or even.
 
-With the single value {%raw%}$$b$${%endraw%} which can exist with any distance from {%raw%}$$a$${%endraw%} and {%raw%}$$c$${%endraw%}, {%raw%}$$a$${%endraw%} and {%raw%}$$c$${%endraw%} will always have a fixed distance from each other.
+This therefore means that adding both values must result in a positive value before the addition of k.
 
-If I take my pythagorean distance {%raw%}$$k = c - a$${%endraw%}, I will find that we satisfy our natural number requirements of having whole number triples when {%raw%}$$b \% k  = 0 \;if\; k \% 2 = 0 $${%endraw%} but only when k is even. If it is a power of 2, we find that it will work provided the value is at least a multiple of {%raw%}$$ k / 2 $${%endraw%}.
+We have established that:
+{%raw%}$$c + a = \frac{b^2}{k}$${%endraw%}
 
-However, if {%raw%}$$k$${%endraw%} is odd, then the multiple of {%raw%}$$k$${%endraw%} that gives {%raw%}$$b$${%endraw%} that satisfies this equality must also be odd. So any multiple of {%raw%}$$2 * k $${%endraw%} will not satify our natural number requirement.
+Therefore, to arrive at whole triples, {%raw%}$$\frac{b^2}{k}$${%endraw%} must be even if k is even or odd if k is odd.
 
-We finally assert that {%raw%}$$b \% k  = 0 \;if\; (b / k) \% 2 = 0 $${%endraw%} for multiples of k that are odd.
+The table below where {%raw%}$$k=5$${%endraw%} showcases this summary
+<table>
+  {% for row in site.data.pythagorean_triples_k_5_natural %}
+    {% if forloop.first %}
+    <tr>
+      {% for pair in row %}
+        <th>{{ pair[0] }}</th>
+      {% endfor %}
+    </tr>
+    {% endif %}
 
-
-This ends up with this conditional boundary asserting how to arrive at whole pythagorean triples using this pythagorean distance concept. However, this fails for 40 and others making me believe there's a case with multiples of 8. 
-
-![](http://mathurl.com/render.cgi?%5Cdocumentclass%7Barticle%7D%0A%5Cusepackage%7Bamsmath%7D%0A%0A%5Cbegin%7Bdocument%7D%0A%20%20%5C%5B%0A%20%20%20%20X%28a%2Cb%2Cc%29%5Cin%20%7B%5Cdisplaystyle%20%5Cmathbb%20%7BN%7D%20%7D%20%3D%20%5Cleft%5C%7B%5Cbegin%7Barray%7D%7Blr%7D%0A%20%20%20%20%20%20%20%20b%20%5C%25%20k%20%3D%200%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Beven%20%5C%3Band%20%5C%3Bnot%20%5C%3Ba%20%5C%3Bpower%20%5C%3Bof%20%5C%3B2%5C%5C%0A%20%20%20%20%20%20%20%202%20*%20b%20%5C%25%20k%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Beven%20%5C%3Band%20%5C%3Ba%20%5C%3Bpower%20%5C%3Bof%20%5C%3B2%5C%5C%0A%20%20%20%20%20%20%20%20%28b%5C%25k%29%20%3D%200%20%5C%3Band%5C%3B%20%28b/k%29%20%5C%25%202%5C%3B%20%21%3D%200%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Bodd%20%5C%3Band%20%5C%3Bthe%20%5C%3Bmultiple%20%5C%3Bof%20%5C%3Bk%20%5C%3Bis%20%5C%3B%20odd%0A%20%20%20%20%20%20%20%20%5Cend%7Barray%7D%5Cright%5C%7D%0A%20%20%5C%5D%0A%5Cend%7Bdocument%7D%5Cnocachehttp://mathurl.com/render.cgi?%5Cdocumentclass%7Barticle%7D%0A%5Cusepackage%7Bamsmath%7D%0A%0A%5Cbegin%7Bdocument%7D%0A%20%20%5C%5B%0A%20%20%20%20X%28a%2Cb%2Cc%29%5Cin%20%7B%5Cdisplaystyle%20%5Cmathbb%20%7BN%7D%20%7D%20%3D%20%5Cleft%5C%7B%5Cbegin%7Barray%7D%7Blr%7D%0A%20%20%20%20%20%20%20%20b%20%5C%25%20k%20%3D%200%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Beven%20%5C%3Band%20%5C%3Bnot%20%5C%3Ba%20%5C%3Bpower%20%5C%3Bof%20%5C%3B2%5C%5C%0A%20%20%20%20%20%20%20%202%20*%20b%20%5C%25%20k%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Beven%20%5C%3Band%20%5C%3Ba%20%5C%3Bpower%20%5C%3Bof%20%5C%3B2%5C%5C%0A%20%20%20%20%20%20%20%20%28b%5C%25k%29%20%3D%200%20%5C%3Band%5C%3B%20%28b/k%29%20%5C%25%202%5C%3B%20%21%3D%200%2C%20%26%20%5Ctext%7Bif%20%7D%20k%20%5C%3Bis%20%5C%3Bodd%20%5C%3Band%20%5C%3Bthe%20%5C%3Bmultiple%20%5C%3Bof%20%5C%3Bk%20%5C%3Bis%20%5C%3B%20odd%0A%20%20%20%20%20%20%20%20%5Cend%7Barray%7D%5Cright%5C%7D%0A%20%20%5C%5D%0A%5Cend%7Bdocument%7D%5Cnocache)
-
+    {% tablerow pair in row %}
+      {{ pair[1] }}
+    {% endtablerow %}
+{% endfor %}
+</table>
 
 # Conclusion
 Decade long interests in math can have long-lasting benefits such as sleep deprivation and hyper-focus during these kinds of nostalgic moments.
@@ -363,8 +373,6 @@ Decade long interests in math can have long-lasting benefits such as sleep depri
 I found writing this exciting and I hope you all as my "Dearest Gentle Readers" found this gossip amusing.
 
 If you enjoyed this, I write about math problems I remember from day to day, one interesting being this optimisation case for [Project Euler, Problem 25](https://medium.com/an-idea/solving-project-euler-problem-25-4318b8df8bf7). Do send me those you also come across day-to-day.
-
-As with the case of establishing a boundary for the various conditions under "Weird patterns in getting whole triples", I find this exercise would be more than encouraging for those who love to venture into numerical patterns. I wish you the best in those endeavours and I would love to hear about your findings, email: me[at]bakman[dot]build with what you find.
 
 Code for the simulations done for this article can be found here: [https://github.com/tiemma/unravelling-mathematical-threesomes](https://github.com/tiemma/unravelling-mathematical-threesomes) and a summary of mathematical symbols used in this article can be found here: [https://en.wikipedia.org/wiki/Glossary_of_mathematical_symbols](https://en.wikipedia.org/wiki/Glossary_of_mathematical_symbols )
 
