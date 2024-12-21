@@ -259,7 +259,9 @@ With the single value {%raw%}$$b$${%endraw%} which can exist with any distance f
 With this, you arrive at a conclusion where the triples can be established with some pythagorean distance {%raw%}$$k$${%endraw%} such that all the members of this threesome satisfy each other (lol!)
 
 {%raw%}
-\\[ \forall b \in {\displaystyle \mathbb {N} }, \exists \;a \;,\; c \in {\displaystyle \mathbb {R} } \;forming \;a \;pythagorean \;triple \;\ni \; k \in {\displaystyle \mathbb {N} } \; \\{k = c - a \\} \\]
+\\[ \forall b \in {\displaystyle \mathbb {N} }, \exists \;a \;,\; c \in {\displaystyle \mathbb {R} } \\]
+
+\\[forming \;a \;pythagorean \;triple \;\ni \; k \in {\displaystyle \mathbb {N} } \; \\{k = c - a \\} \\]
 
 
 
