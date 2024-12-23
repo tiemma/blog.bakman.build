@@ -42,7 +42,7 @@ Therefore, all numbers for the start of this exercise will be bounded within the
 {% endraw %}
 
 {%raw%}$$a$${%endraw%} will represent either the adjacent or opposite, it does not matter which and {%raw%}$$c$${%endraw%} will be the hypotenuse/diagonal.
-To ease out the discussion in later parts of this article, these will exist in the positive [real number space](https://en.wikipedia.org/wiki/Real_number).
+To ease out the discussion in later parts of this article, these will exist in the positive [real number space](https://en.wikipedia.org/wiki/Real_number). This is because either {%raw%}$$a$${%endraw%} or {%raw%}$$c$${%endraw%} can be fractional.
 
 {% raw %}
 \\[ \forall a,c \in {\displaystyle \mathbb {R} } \ni \\{a \geq 1 \;and\; c > a\\} \\]
@@ -113,7 +113,7 @@ $$c - a = 1$$
 
 {% endraw %}
 
-When considering the equalities, we must enforce that {%raw%}$$c + a > c - a$${%endraw%}. This is because in our natural number space without 0, we cannot have an addition greater or equal to a subtraction.
+When considering the equalities, we must enforce that {%raw%}$$c + a > c - a$${%endraw%}. This is because in our natural number space without 0, we must have an addition greater than a subtraction, we cannot have them equal as {%raw%}$$a$${%endraw%} must be greater than 0.
 
 Substituting that {%raw%}$$c + a = \frac{b^2}{k}$${%endraw%} and  {%raw%}$$k = c - a = 1$${%endraw%}, we have that {%raw%}$$b ^ 2 > 1$${%endraw%}, implying {%raw%}$$b > 1$${%endraw%}
 
