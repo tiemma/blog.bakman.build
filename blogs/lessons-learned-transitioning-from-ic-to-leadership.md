@@ -63,6 +63,26 @@ Believing you're responsible for a solution here is the false case of ownership,
 you are rarely going to understand. Leave these alternating problems for upper management to figure out, they get paid to do it for you.
 
 
+### Understand where the dead bodies are buried
+
+*"Understanding where the dead bodies are buried"* is a concept of realising the unspoken biases about how business decisions are made.
+Your belief that the folks making decisions are rational is correct but subjective, they're not on the front lines with you day-to-day and that skews their
+understanding of the problems. 
+
+Knowing the paths to success is dependent on the organisation, its history, culture, "highschool frat cliques" that require you pay homage and several other
+internalised processes that make no sense. Avoiding them may save you a lifelong deal of problems but this will be very short lived -- know them before you go diving into landmines every one knows but no one talks about because
+"you should know about it".
+
+
+### People bring themselves to work
+
+A star player shines when the sun goes down, we all have seasonal moments laced with ups and downs that the four walls of the business will
+probably never hear. Always remember that there's a sense of humanity when working with people you don't know them -- their feelings at every moment will influence
+their ability to work with you.
+
+Over time, life will happen to everyone and you sadly must deal with the consequences of it, emotional reactions and every other thing attached
+to being human. Do the right thing at these times, respect is earned and being a decisive (not exactly good?) person should come first in your decisions.
+
 And, finally...
 
 ### Remember work is a means to an end
