@@ -9,6 +9,9 @@ tags: ["politics", "corporate", "life"]
 So many lessons are learned when you begin planning work across many different organisations and people. I share
 my experience thus far in this article, my hope is to keep this a living document for myself.
 
+My best lesson thus far:
+> Adopt diplomacy instead and piss some people off. They'd forget about it in the coming week anyways ;-).
+
 
 ## Lessons Learned
 ### Speed is critical
@@ -36,7 +39,9 @@ to merge it all into a "go-to-the-moon" happy plan. This however brought frustra
 with the "happy plan", their point of happiness drifted faster than the second timer on my watch.
 
 Keeping stakeholders aligned means meeting them at a point you can deliver at and a point they can accept, there is no happy path when multiple people
-are concerned with a problem, adopt diplomacy instead and piss some people off. They'd forget about it in the coming week anyways ;-).
+are concerned with a problem. 
+
+Adopt diplomacy instead and piss some people off. They'd forget about it in the coming week anyways ;-).
 
 ### Set expectations very early
 
@@ -53,8 +58,7 @@ A good path here is to read DHH's article on [Commit to competence in the coming
 
 ### Let others fight your battles, know your pay grade
 
-There is this inflection point when you move from being an IC that code solves your problems after keeping yourself oblivious; there exists a lifestyle about living in the politics
-of change and the organisation at wide. 
+As an IC, you have probably been cushioned with the ideals of code solving your problems. In my transition, I found there is this inflection point when you have to stop keeping yourself oblivious to politics and understand the lifestyle around change management and the (unspoken?) dynamics of the organisation. 
 
 Once you transition into leading initiatives, you will at-some-point meet a random bloke who does not like you
 because your boss pissed them off some years ago and you're now stuck driving the far end of the stick the wrong way.
@@ -65,7 +69,7 @@ you are rarely going to understand. Leave these alternating problems for upper m
 
 ### Understand where the dead bodies are buried
 
-*"Understanding where the dead bodies are buried"* is a concept of realising the unspoken biases about how business decisions are made.
+*"Understand where the dead bodies are buried"* is a concept of realising the unspoken biases about how business decisions are made.
 Your belief that the folks making decisions are rational is correct but subjective, they're not on the front lines with you day-to-day and that skews their
 understanding of the problems. 
 
@@ -77,7 +81,7 @@ internalised processes that make no sense. Avoiding them may save you a lifelong
 ### People bring themselves to work
 
 A star player shines when the sun goes down, we all have seasonal moments laced with ups and downs that the four walls of the business will
-probably never hear. Always remember that there's a sense of humanity when working with people you don't know them -- their feelings at every moment will influence
+probably never hear. Always remember that there's a sense of humanity when working with people simply because you don't know them -- their feelings at every moment will influence
 their ability to work with you.
 
 Over time, life will happen to everyone and you sadly must deal with the consequences of it, emotional reactions and every other thing attached
